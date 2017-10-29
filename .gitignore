@@ -1,6 +1,8 @@
 # self define
 .idea/
 .ipynb_checkpoints/
+log/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
