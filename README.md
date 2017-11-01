@@ -3,7 +3,7 @@
 
 ---
 概要
-* algorithms
+* [algorithms](https://github.com/zengbin93/blog/blob/master/html/%E7%AC%AC%E4%B8%80%E8%AF%BE_%E7%AC%AC%E4%B8%89%E5%91%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html)
 * notes_deeplearning.ai
 * notes_paper
 * python
