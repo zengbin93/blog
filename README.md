@@ -1,6 +1,8 @@
 # blog - Z
->blog是我的博客仓库，主要是存放一些博客写作想法和草稿，当然，写好的博客也会在这里有一个备份，以便持续完善。blog正式发布地址 [zengbin-简书](http://www.jianshu.com/u/0cd3889d64bb)
-
+>blog是我的博客仓库，主要是存放一些博客写作想法和草稿，当然，写好的博客也会在这里有一个备份，以便持续完善。
+>blog正式发布地址:
+>* [zengbin-简书](http://www.jianshu.com/u/0cd3889d64bb)
+>* [github pages](https://zengbin93.github.io/blog/)
 ---
 概要
 * algorithms
