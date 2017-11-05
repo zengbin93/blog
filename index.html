@@ -1,0 +1,28 @@
+---
+layout: default
+active: index
+---
+
+<div id="banner">
+  <span class="date">{{ site.time | date: "%b,%d %Y"  }}</span>
+  <span class="sub_info"> today </span>
+</div>
+
+<div class="posts">
+  {% for post in paginator.posts %}
+  <article class="post">
+    <h2><a href="{{ post.url }}"> {{ post.title | escape}} </a></h2>
+    <p>{{ post.content | truncatewords: 5 }}</p>
+  </article>
+  {% endfor %}
+</div>
+
+<!-- Pagination links -->
+<div class="pager">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path }}" class="pre">Pre</a>
+  {% endif %}
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path }}" class="next">Next</a>
+  {% endif %}
+</div>

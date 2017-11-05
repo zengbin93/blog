@@ -1,5 +1,20 @@
-theme: jekyll-theme-cayman
+title: zengbin93-Blog   # your title
+author: 曾斌 # your name
+description: 梳理个人知识体系 # your description
+avatar: /images/avatar.png # change avatar
 
-name: 'zengbin93 - Blog'
-description: '这是一份写给自己，帮助梳理个人知识体系的博客！'
-encoding: 'utf-8'
+# Build Settings
+markdown: kramdown
+highlighter: rouge
+
+# Pagination
+paginate: 5
+paginate_path: "/page:num/"
+gems: [jekyll-paginate]
+
+# Comments
+# disqus:
+#   shortname: xxxx-xxxxx-xxx   # your disqus shortname
+
+# Google Analytics
+# google_analytics: xx-xxxxxxxx-1  # your google analytics
