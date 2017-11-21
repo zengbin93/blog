@@ -1,0 +1,645 @@
+WEBVTT
+
+1
+00:00:00.670 --> 00:00:05.620
+For this final for this week, let's talk
+a little bit about why convolutions are so
+
+2
+00:00:05.620 --> 00:00:09.100
+useful when you include them
+in your neural networks.
+
+3
+00:00:09.100 --> 00:00:14.130
+And then finally, let's briefly talk about
+how to put this all together and how you
+
+4
+00:00:14.130 --> 00:00:19.000
+could train a convolutional neural network
+when you have a labeled training set.
+
+5
+00:00:21.240 --> 00:00:26.300
+I think the two main advantages
+of convolutional layers
+
+6
+00:00:26.300 --> 00:00:29.100
+over just using fully connected layers.
+
+7
+00:00:29.100 --> 00:00:34.150
+And the advantages are parameter
+sharing and sparsity of connections.
+
+8
+00:00:34.150 --> 00:00:36.405
+Let me illustrate through example.
+
+9
+00:00:36.405 --> 00:00:43.174
+Let's say you have a 32 by
+32 by 3 dimensional image.
+
+10
+00:00:43.174 --> 00:00:48.840
+And this actually comes from
+the example from the previous video,
+
+11
+00:00:48.840 --> 00:00:53.503
+but let's say you use a 5
+by 5 filter with 6 filters.
+
+12
+00:00:56.204 --> 00:01:04.651
+And so this gives you a 28 by
+28 by 6 dimensional outputs.
+
+13
+00:01:04.651 --> 00:01:09.811
+So 32 by 32 by 3 is 3,072.
+
+14
+00:01:09.811 --> 00:01:17.480
+And 28 by 28 by 6 if you multiply
+out those numbers is 4,704.
+
+15
+00:01:17.480 --> 00:01:22.500
+And so, if you were to create
+a neural network with 3,072
+
+16
+00:01:22.500 --> 00:01:28.170
+units in one layer, and
+4,704 units in the next layer,
+
+17
+00:01:28.170 --> 00:01:32.680
+and you were to connect every one of
+these neurons, then the weight matrix,
+
+18
+00:01:32.680 --> 00:01:37.291
+the number parentheses in
+the weight matrix would be 3,072
+
+19
+00:01:37.291 --> 00:01:42.400
+times 4,704, which is about 14 million.
+
+20
+00:01:42.400 --> 00:01:45.400
+So that's just a lot of
+parameters to train.
+
+21
+00:01:45.400 --> 00:01:49.926
+And today you can train your networks with
+even more parameters than 14 million, but
+
+22
+00:01:49.926 --> 00:01:52.654
+considering that this is
+just a pretty small image,
+
+23
+00:01:52.654 --> 00:01:55.410
+this is a lot of parameters to train.
+
+24
+00:01:55.410 --> 00:01:59.898
+And of course if this were to
+be a 1,000 by 1,000 image,
+
+25
+00:01:59.898 --> 00:02:03.990
+then this weight matrix will
+just become invisibly large.
+
+26
+00:02:05.270 --> 00:02:10.420
+But if you look at the number
+parameters in this convolutional layer.
+
+27
+00:02:10.420 --> 00:02:12.700
+Each filter is 5 by 5.
+
+28
+00:02:12.700 --> 00:02:17.310
+So each filter has 25 parameters
+plus the base parameter means you
+
+29
+00:02:17.310 --> 00:02:21.140
+have 26 parameters per filter,
+and you have 6 filters.
+
+30
+00:02:21.140 --> 00:02:26.990
+So the total number of parameters is
+that which is equal to 156 parameters.
+
+31
+00:02:26.990 --> 00:02:31.261
+And so the number of parameters in
+this ConvLayer remains quite small.
+
+32
+00:02:31.261 --> 00:02:37.351
+And the reason that a ConvNets has routed
+this small parameter is two reasons,
+
+33
+00:02:37.351 --> 00:02:39.480
+one is parameter sharing.
+
+34
+00:02:40.950 --> 00:02:44.960
+And parameter sharing is
+motivated by the observation that
+
+35
+00:02:44.960 --> 00:02:48.890
+feature detector such as vertical edge
+detector that's useful in one part of
+
+36
+00:02:48.890 --> 00:02:51.240
+the image is probably useful
+in another part of the image.
+
+37
+00:02:51.240 --> 00:02:55.270
+And what that means is that if you've
+figured out say a 3 by 3 filter for
+
+38
+00:02:55.270 --> 00:03:02.190
+detecting vertical edges, you can then
+apply the same 3 by 3 filter over here,
+
+39
+00:03:02.190 --> 00:03:06.500
+and then the next position over, and
+in the next position over and so on.
+
+40
+00:03:06.500 --> 00:03:10.920
+And so each of these feature detectors,
+each of these outputs
+
+41
+00:03:10.920 --> 00:03:16.530
+can use the same parameters in lots of
+different positions in your input image
+
+42
+00:03:16.530 --> 00:03:20.971
+in order to detect say a vertical edge or
+some other feature.
+
+43
+00:03:22.480 --> 00:03:26.880
+And I think this is true for low level
+features like edges as well as for
+
+44
+00:03:26.880 --> 00:03:31.500
+higher level features like maybe detecting
+the eye that indicates a face or
+
+45
+00:03:31.500 --> 00:03:33.130
+a cat or something is there.
+
+46
+00:03:33.130 --> 00:03:38.080
+But being able to share in this case the
+same nine parameters to compute all 16 of
+
+47
+00:03:38.080 --> 00:03:43.900
+these outputs as one of the ways
+the number of parameters is reduced.
+
+48
+00:03:43.900 --> 00:03:47.800
+And it also just seems intuitive
+that a future detector
+
+49
+00:03:47.800 --> 00:03:52.300
+like a vertical edge detector computed for
+the upper left hand corner of the image.
+
+50
+00:03:52.300 --> 00:03:55.540
+The same feature seems like
+it will probably be useful,
+
+51
+00:03:55.540 --> 00:03:59.470
+has a good chance of being useful for
+the lower right hand corner of the image.
+
+52
+00:03:59.470 --> 00:04:02.370
+So maybe you don't need to learn
+separate feature detectors for
+
+53
+00:04:02.370 --> 00:04:05.260
+the upper left hand and
+lower right hand corners of the image.
+
+54
+00:04:05.260 --> 00:04:08.900
+And maybe you do have a data set
+where the upper left hand corner and
+
+55
+00:04:08.900 --> 00:04:12.245
+the lower right hand corner
+have different distributions or
+
+56
+00:04:12.245 --> 00:04:15.582
+maybe look a little bit different but
+they might be similar enough.
+
+57
+00:04:15.582 --> 00:04:20.200
+They're sharing feature detectors in
+all across the image works just fine.
+
+58
+00:04:20.200 --> 00:04:25.128
+The second way that ConvNets get away
+with having relatively few parameters
+
+59
+00:04:25.128 --> 00:04:27.369
+is by having sparse connections.
+
+60
+00:04:27.369 --> 00:04:28.767
+So here's what I mean.
+
+61
+00:04:28.767 --> 00:04:32.985
+If you look at this 0,
+this is computed via 3 by 3 convolution.
+
+62
+00:04:32.985 --> 00:04:38.450
+And so it depends only on this
+3 by 3 input degrader cells.
+
+63
+00:04:38.450 --> 00:04:43.500
+So is as if this open unit
+on the right is connected
+
+64
+00:04:43.500 --> 00:04:50.780
+only to 9 out of these 6 by 6,
+36 input features.
+
+65
+00:04:50.780 --> 00:04:55.710
+And in particular, the rest of these
+pixel values, all of these pixel values,
+
+66
+00:04:55.710 --> 00:05:02.520
+all of these pixel values do not
+have any effect on that output.
+
+67
+00:05:02.520 --> 00:05:05.380
+So that's what I mean by
+small sea of connections.
+
+68
+00:05:05.380 --> 00:05:10.200
+As another example, this output depends
+
+69
+00:05:10.200 --> 00:05:15.710
+only on these nine input features.
+
+70
+00:05:15.710 --> 00:05:20.550
+And so it is as if only those nine input
+features are connected to this output, and
+
+71
+00:05:20.550 --> 00:05:23.800
+the other pixels just don't
+affect this output at all.
+
+72
+00:05:23.800 --> 00:05:29.750
+And so, through these two mechanisms, a
+neural network has a lot fewer parameters,
+
+73
+00:05:29.750 --> 00:05:32.560
+which allows it to be trained
+with smaller training sets, and
+
+74
+00:05:32.560 --> 00:05:35.630
+it's less prone to be over-fitting.
+
+75
+00:05:35.630 --> 00:05:39.470
+And sometimes you also hear about
+convolutional neural networks being very
+
+76
+00:05:39.470 --> 00:05:42.460
+good at capturing
+translation of the areas.
+
+77
+00:05:42.460 --> 00:05:46.350
+And that's the observation
+that a picture of a cat
+
+78
+00:05:46.350 --> 00:05:50.100
+shifted a couple of pixels to the right
+is still pretty clearly a cat.
+
+79
+00:05:51.370 --> 00:05:57.990
+And a convolutional structure helps
+the neural network encode the fact that
+
+80
+00:05:57.990 --> 00:06:02.640
+an image shifted a few pixels should
+result in pretty similar features, and
+
+81
+00:06:02.640 --> 00:06:08.220
+should probably be assigned
+the same output label.
+
+82
+00:06:08.220 --> 00:06:11.020
+And the fact that you're
+applying the same filter
+
+83
+00:06:11.020 --> 00:06:13.350
+yields all the position of the image.
+
+84
+00:06:13.350 --> 00:06:16.330
+Of both the early layers and
+in the later layers,
+
+85
+00:06:16.330 --> 00:06:20.776
+that hopes in your network automatically
+learn to be with a more robust.
+
+86
+00:06:20.776 --> 00:06:26.884
+So to better capture this desirable
+property of translation and variance.
+
+87
+00:06:29.526 --> 00:06:33.532
+So these are maybe are couple
+of reasons why convolutions or
+
+88
+00:06:33.532 --> 00:06:38.040
+convolutional neural networks works so
+well in computer vision.
+
+89
+00:06:38.040 --> 00:06:42.420
+Finally, let's put it all together and see
+how you can train one of these networks.
+
+90
+00:06:43.460 --> 00:06:45.860
+Let's say you want to
+build a cat detector, and
+
+91
+00:06:45.860 --> 00:06:51.360
+you have a label training set as
+follows where now x is a image.
+
+92
+00:06:52.410 --> 00:06:56.620
+And the ys can be binary labels or
+one of k causes.
+
+93
+00:06:58.750 --> 00:07:03.260
+And let's say you've chosen
+a convolutional neural network structure.
+
+94
+00:07:03.260 --> 00:07:07.870
+Maybe started the image and having
+convolution and pulling layers, and then
+
+95
+00:07:07.870 --> 00:07:14.224
+some fully connected layers, followed by
+a soft max output that then outputs y hat.
+
+96
+00:07:14.224 --> 00:07:18.830
+The ConvLayers and
+the fully connected layers will have
+
+97
+00:07:18.830 --> 00:07:23.910
+various parameters to help
+you as well as biases b.
+
+98
+00:07:23.910 --> 00:07:28.729
+And so, any set in the parameters
+therefore lets you define a cost
+
+99
+00:07:28.729 --> 00:07:33.372
+function similar to what we have
+seen in the previous courses,
+
+100
+00:07:33.372 --> 00:07:37.334
+where were randomly
+initialized parameters w and b.
+
+101
+00:07:37.334 --> 00:07:43.111
+You can compute the cost J as the sum
+of losses of the neural network's
+
+102
+00:07:43.111 --> 00:07:48.500
+predictions on your entire training set,
+maybe divide it by m.
+
+103
+00:07:50.670 --> 00:07:55.170
+So to train this neural network all
+you need to do is then use gradient
+
+104
+00:07:55.170 --> 00:07:59.940
+descents or some other algorithm
+like gradient descent with momentum,
+
+105
+00:07:59.940 --> 00:08:03.870
+or armlets prop or
+add them or something else.
+
+106
+00:08:03.870 --> 00:08:07.010
+In order to optimize all
+the parameters in the neural network
+
+107
+00:08:07.010 --> 00:08:09.640
+to try to reduce the cost function J.
+
+108
+00:08:09.640 --> 00:08:15.170
+And you find that if you do this, you can
+build a very effective cat detector or
+
+109
+00:08:15.170 --> 00:08:16.810
+some other detector.
+
+110
+00:08:19.000 --> 00:08:21.577
+So congratulations on
+finishing this week's videos.
+
+111
+00:08:21.577 --> 00:08:26.111
+You've now seen all the basic building
+blocks of a convolution neural network,
+
+112
+00:08:26.111 --> 00:08:30.258
+and how to put them together into
+an effective image recognition system.
+
+113
+00:08:30.258 --> 00:08:34.257
+In this weeks' programming exercises, I
+think all of these things will become more
+
+114
+00:08:34.257 --> 00:08:38.089
+concrete and you get a chance to practice
+implementing these things yourself and
+
+115
+00:08:38.089 --> 00:08:40.180
+seeing it work for yourself.
+
+116
+00:08:40.180 --> 00:08:44.090
+Next week, we'll continue to go deeper
+into convolutional neural networks.
+
+117
+00:08:44.090 --> 00:08:47.400
+I mentioned earlier that there's just
+a lot of hyper parameters in convolutional
+
+118
+00:08:47.400 --> 00:08:48.090
+neural networks.
+
+119
+00:08:48.090 --> 00:08:52.060
+So what I want to do next week is show
+you a few concrete examples of some of
+
+120
+00:08:52.060 --> 00:08:55.560
+the most effective convolutional
+neural networks, so you can start to
+
+121
+00:08:55.560 --> 00:09:00.220
+recognize the patterns of what types
+of network architectures are effective.
+
+122
+00:09:00.220 --> 00:09:03.070
+And one thing that people
+will often do is just
+
+123
+00:09:03.070 --> 00:09:05.500
+take the architecture that
+someone else has found and
+
+124
+00:09:05.500 --> 00:09:08.990
+published in a research paper and
+just use that for your application.
+
+125
+00:09:08.990 --> 00:09:12.877
+And so by seeing some more
+concrete examples next week,
+
+126
+00:09:12.877 --> 00:09:15.446
+you also learn how to do that better.
+
+127
+00:09:15.446 --> 00:09:17.260
+And beyond that, next week,
+
+128
+00:09:17.260 --> 00:09:21.850
+we'll also just get that intuitions
+about what makes ConvNets work well.
+
+129
+00:09:21.850 --> 00:09:25.960
+And then in the rest of the course,
+we'll also see a variety of other computer
+
+130
+00:09:25.960 --> 00:09:30.240
+vision applications such as object
+detection and neural static transfer.
+
+131
+00:09:30.240 --> 00:09:34.280
+How to create new forms of artwork
+using these types of algorithms.
+
+132
+00:09:34.280 --> 00:09:35.590
+So that's it for this week.
+
+133
+00:09:35.590 --> 00:09:39.320
+Best of luck with the homeworks, and
+I look forward to seeing you next week.

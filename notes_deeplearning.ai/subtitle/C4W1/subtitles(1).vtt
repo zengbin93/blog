@@ -1,0 +1,759 @@
+WEBVTT
+
+1
+00:00:01.580 --> 00:00:05.000
+The convolutional operation is one of
+the fundamental building blocks of
+
+2
+00:00:05.000 --> 00:00:06.870
+a convolutional neural network.
+
+3
+00:00:06.870 --> 00:00:10.050
+Using edge detection as
+a motivating example.
+
+4
+00:00:10.050 --> 00:00:14.030
+In this video, you see how
+the convolution operation works.
+
+5
+00:00:17.743 --> 00:00:18.943
+In previous videos,
+
+6
+00:00:18.943 --> 00:00:23.810
+I've talked about how the early layers
+of a neural network might detect edges.
+
+7
+00:00:23.810 --> 00:00:27.250
+And then the somewhat later layers
+might detect parts of objects.
+
+8
+00:00:27.250 --> 00:00:31.320
+And then even later layers maybe
+detect parts of complete objects,
+
+9
+00:00:31.320 --> 00:00:33.380
+like people's faces, in this case.
+
+10
+00:00:35.270 --> 00:00:40.740
+In this video, you see how you
+can detect edges in an image.
+
+11
+00:00:40.740 --> 00:00:42.360
+Let's take an example.
+
+12
+00:00:42.360 --> 00:00:46.760
+Given a picture like that, for a computer
+to figure out what are the objects in this
+
+13
+00:00:46.760 --> 00:00:53.205
+picture, the first thing you might do is
+maybe detect vertical edges in this image.
+
+14
+00:00:54.650 --> 00:00:59.470
+So, for example, this image has all those
+vertical lines where the railings are,
+
+15
+00:00:59.470 --> 00:01:04.040
+as well as kind of vertical lines,
+idea of line, of these pedestrians.
+
+16
+00:01:04.040 --> 00:01:08.420
+And so those get detected in this
+vertical edge detector output.
+
+17
+00:01:09.860 --> 00:01:12.340
+You might also want to
+detect horizontal edges.
+
+18
+00:01:12.340 --> 00:01:17.180
+So, for example, there's a very strong
+horizontal line where this railing is.
+
+19
+00:01:17.180 --> 00:01:20.410
+And then also gets detected,
+and it's roughly here.
+
+20
+00:01:21.520 --> 00:01:25.034
+So how do you detect edges
+in an image like this?
+
+21
+00:01:25.034 --> 00:01:26.160
+Let's look at an example.
+
+22
+00:01:27.670 --> 00:01:31.056
+Here is a 6 x 6 grayscale image.
+
+23
+00:01:31.056 --> 00:01:35.949
+And because this is a grayscale image,
+this is just a 6 x 6 x 1 matrix,
+
+24
+00:01:35.949 --> 00:01:40.700
+rather than 6 x 6 x 3 because there
+aren't separate RGB channels.
+
+25
+00:01:41.790 --> 00:01:46.213
+In order to detect edges,
+let's say vertical edges in this image,
+
+26
+00:01:46.213 --> 00:01:49.093
+what you can do is
+construct a 3 x 3 matrix.
+
+27
+00:01:49.093 --> 00:01:53.733
+And in the hollands, the terminology
+of convolutional neural networks,
+
+28
+00:01:53.733 --> 00:01:55.950
+this is going to be called a filter.
+
+29
+00:01:57.390 --> 00:02:01.543
+And I'm going to construct
+a 3 x 3 filter or
+
+30
+00:02:01.543 --> 00:02:08.679
+3 x 3 matrix that looks like this,
+1 1 1, 0 0 0, -1 -1 -1.
+
+31
+00:02:08.679 --> 00:02:12.947
+Sometimes research papers will call
+this a kernel instead of a filter.
+
+32
+00:02:12.947 --> 00:02:16.370
+But I'm going to use the filter
+terminology in these videos.
+
+33
+00:02:17.890 --> 00:02:22.730
+And what you're going to do is take
+the 6 x 6 image and convolve it.
+
+34
+00:02:22.730 --> 00:02:27.107
+And the convolution operation
+is denoted by this asterisk.
+
+35
+00:02:29.560 --> 00:02:32.690
+And convolve it with the 3 x 3 filter.
+
+36
+00:02:32.690 --> 00:02:37.410
+One slightly unfortunate thing about
+the notation is that in mathematics,
+
+37
+00:02:37.410 --> 00:02:41.490
+the asterisk is the standard symbol for
+convolution.
+
+38
+00:02:41.490 --> 00:02:45.648
+But in Python, this is also used
+to denote multiplication or
+
+39
+00:02:45.648 --> 00:02:48.440
+maybe element-wise multiplication.
+
+40
+00:02:48.440 --> 00:02:53.009
+So this asterisk has dual purposes,
+it's overloaded notation.
+
+41
+00:02:53.009 --> 00:02:58.598
+But I'll try to be clear in these videos
+when this asterisk refers to convolution.
+
+42
+00:02:58.598 --> 00:03:03.844
+And the output of this convolution
+operator will be a 4 x 4 matrix,
+
+43
+00:03:03.844 --> 00:03:09.020
+which you can interpret and
+which you can think of as a 4 x 4 image.
+
+44
+00:03:09.020 --> 00:03:13.330
+And the way you compute this
+4 x 4 output is as follows.
+
+45
+00:03:13.330 --> 00:03:18.522
+To compute the first element, the upper
+left element of this 4 x 4 matrix,
+
+46
+00:03:18.522 --> 00:03:21.848
+what you're going to do is
+take the 3 x 3 filter and
+
+47
+00:03:21.848 --> 00:03:26.254
+paste it on top of the 3 x 3 region
+of your original input image.
+
+48
+00:03:26.254 --> 00:03:30.920
+So I've written here 1 1 1,
+
+49
+00:03:30.920 --> 00:03:34.872
+0 0 0, -1 -1 -1.
+
+50
+00:03:34.872 --> 00:03:38.221
+And what you should do is take
+the element-wise products.
+
+51
+00:03:38.221 --> 00:03:41.481
+So the first one would be 3 x 1.
+
+52
+00:03:41.481 --> 00:03:46.377
+And then the second one would be 1 x 1,
+bring down here, 1 x 1.
+
+53
+00:03:46.377 --> 00:03:50.398
+And then + 2 x 1, this one.
+
+54
+00:03:50.398 --> 00:03:53.340
+And then add up all of
+the resulting nine numbers.
+
+55
+00:03:53.340 --> 00:04:00.451
+So then the middle column gives
+you 0 x 0 + 5 x 0 + 7 x 0.
+
+56
+00:04:00.451 --> 00:04:06.357
+And then the rightmost
+column gives 1 x -1,
+
+57
+00:04:06.357 --> 00:04:09.088
+8 x -1 + 2 x -1.
+
+58
+00:04:09.088 --> 00:04:15.875
+And adding up these nine
+numbers will give you -5.
+
+59
+00:04:15.875 --> 00:04:19.340
+And so I'm going to fill in -5 over here.
+
+60
+00:04:19.340 --> 00:04:22.450
+Okay, and you can add up these nine
+numbers in any order, of course.
+
+61
+00:04:22.450 --> 00:04:27.550
+It's just that I went
+down the first column,
+
+62
+00:04:27.550 --> 00:04:29.620
+then the second column, then the third.
+
+63
+00:04:29.620 --> 00:04:33.467
+Next, to figure out what
+is this second element,
+
+64
+00:04:33.467 --> 00:04:39.526
+you're going to take the blue square and
+shift it one step to the right, like so.
+
+65
+00:04:39.526 --> 00:04:42.100
+And let me get rid of
+the green marks here.
+
+66
+00:04:42.100 --> 00:04:46.330
+And you're going to do the same
+element-wise product and then addition.
+
+67
+00:04:46.330 --> 00:04:52.501
+So you have 0 x 1, + 5 x 1, + 7 x 1,
+
+68
+00:04:52.501 --> 00:04:57.400
++ 1 x 0, + 8 x 0, + 2 x 0,
+
+69
+00:04:57.400 --> 00:05:03.450
++ 2 x -1, + 9 x -1, + 5 x -1.
+
+70
+00:05:03.450 --> 00:05:10.791
+And if you add up those nine numbers,
+you end up with -4, and so on.
+
+71
+00:05:10.791 --> 00:05:16.078
+If you shift this to the right, do the
+nine products and add them up, you get 0.
+
+72
+00:05:16.078 --> 00:05:19.424
+And then over here, you should get 8.
+
+73
+00:05:19.424 --> 00:05:26.017
+And just to verify,
+you have 2 + 9 + 5, that's 16.
+
+74
+00:05:26.017 --> 00:05:29.165
+Then the middle column gives you 0.
+
+75
+00:05:29.165 --> 00:05:35.110
+And then the rightmost column
+4 + 1 + 3 x -1, that's -8.
+
+76
+00:05:35.110 --> 00:05:39.621
+So that's 16 on the left column, -8, and
+
+77
+00:05:39.621 --> 00:05:43.796
+that gives you 8, like we have over here.
+
+78
+00:05:43.796 --> 00:05:47.738
+Next, in order to get you
+this element in the next row,
+
+79
+00:05:47.738 --> 00:05:52.280
+what you do is take the blue square and
+now shift it one down.
+
+80
+00:05:52.280 --> 00:05:54.450
+So you now have it in that position.
+
+81
+00:05:54.450 --> 00:05:59.920
+And again, repeat the element-wise
+product and then adding exercise.
+
+82
+00:05:59.920 --> 00:06:02.967
+And if you do that,
+you should get -10 here.
+
+83
+00:06:05.016 --> 00:06:11.147
+And if you shift it one to the right,
+you should get -2.
+
+84
+00:06:11.147 --> 00:06:14.590
+And then 2, and then 3, and so on,
+
+85
+00:06:14.590 --> 00:06:20.050
+to then throw in all the rest
+of the elements of the matrix.
+
+86
+00:06:21.400 --> 00:06:26.281
+And so to be clear,
+this -16 would be obtained
+
+87
+00:06:26.281 --> 00:06:29.980
+from this lower right 3 x 3 region.
+
+88
+00:06:31.080 --> 00:06:36.600
+So a 6 x 6 matrix convolved with a 3
+x 3 matrix gives you a 4 x 4 matrix.
+
+89
+00:06:38.182 --> 00:06:39.760
+And these images and filters,
+
+90
+00:06:39.760 --> 00:06:43.390
+these are really just matrices
+of various dimensions.
+
+91
+00:06:44.640 --> 00:06:49.779
+But the matrix on the left is
+convenient to interpret as an image.
+
+92
+00:06:49.779 --> 00:06:52.564
+And the one in the middle,
+we interpret as a filter.
+
+93
+00:06:52.564 --> 00:06:57.021
+And the one on the right, we can
+interpret that as maybe another image.
+
+94
+00:06:57.021 --> 00:07:00.830
+And this turns out to be
+a vertical edge detector.
+
+95
+00:07:00.830 --> 00:07:03.440
+And you see why on the next slide.
+
+96
+00:07:03.440 --> 00:07:06.097
+Before going on, though,
+just one other comment.
+
+97
+00:07:06.097 --> 00:07:10.476
+Which is that if you implement this in
+a programming language, then in practice,
+
+98
+00:07:10.476 --> 00:07:13.840
+most programming languages will
+have some different function
+
+99
+00:07:13.840 --> 00:07:16.800
+rather than an asterisk
+to denote convolution.
+
+100
+00:07:16.800 --> 00:07:20.010
+So, for example,
+in the programming exercise, you use or
+
+101
+00:07:20.010 --> 00:07:24.040
+you implement a function
+called conv_forward.
+
+102
+00:07:24.040 --> 00:07:28.481
+If you do this in tensorflow,
+
+103
+00:07:28.481 --> 00:07:34.528
+there's a function tf.nn.conv2d.
+
+104
+00:07:34.528 --> 00:07:37.000
+And then other deep learning
+programming frameworks.
+
+105
+00:07:37.000 --> 00:07:41.538
+In the Keras programming framework,
+which you'll see later in this course,
+
+106
+00:07:41.538 --> 00:07:46.090
+there's a function called Conv2D that
+implements convolution, and so on.
+
+107
+00:07:46.090 --> 00:07:49.559
+But all the deep learning frameworks
+that have good support for
+
+108
+00:07:49.559 --> 00:07:54.218
+convolution will have some function for
+implementing this convolution operator.
+
+109
+00:07:56.813 --> 00:07:59.756
+So why is this doing
+vertical edge detection?
+
+110
+00:07:59.756 --> 00:08:01.700
+Let's look at another example.
+
+111
+00:08:03.470 --> 00:08:06.188
+So to illustrate this,
+we're going to use a simplified image.
+
+112
+00:08:06.188 --> 00:08:08.819
+So here is a simple 6 x 6 image,
+
+113
+00:08:08.819 --> 00:08:14.480
+where the left half of the image is 10 and
+the right half is 0.
+
+114
+00:08:14.480 --> 00:08:18.734
+If you caught this as a picture, it might
+look like this, where the left half,
+
+115
+00:08:18.734 --> 00:08:21.775
+the 10s,
+give you brighter pixel intensity values.
+
+116
+00:08:21.775 --> 00:08:25.060
+And the right half gives you
+darker pixel intensity values.
+
+117
+00:08:25.060 --> 00:08:27.890
+I'm using that shade of gray to denote 0s,
+
+118
+00:08:27.890 --> 00:08:32.110
+although maybe it could
+also be drawn as black.
+
+119
+00:08:32.110 --> 00:08:37.654
+But in this image, there's clearly a very
+strong vertical edge right down the middle
+
+120
+00:08:37.654 --> 00:08:42.590
+of this image as it transitions from
+white to black or white to darker color.
+
+121
+00:08:44.070 --> 00:08:48.808
+So when you convolve this
+with the 3 x 3 filter, and so
+
+122
+00:08:48.808 --> 00:08:53.048
+this 3 x 3 filter can be
+visualized as follows.
+
+123
+00:08:53.048 --> 00:08:57.575
+Where it's lighter,
+brighter pixels on the left.
+
+124
+00:08:57.575 --> 00:09:02.080
+And then there's midtones, 0s in
+the middle, and then darker on the right.
+
+125
+00:09:02.080 --> 00:09:05.290
+What you get is this matrix on the right.
+
+126
+00:09:06.640 --> 00:09:10.130
+So just to verify this math, if you want.
+
+127
+00:09:10.130 --> 00:09:15.815
+This 0, for example, is obtained by
+taking the element-wise products and
+
+128
+00:09:15.815 --> 00:09:18.880
+then multiplying with this 3 x 3 block.
+
+129
+00:09:18.880 --> 00:09:23.008
+And so you get from the left
+column 10 + 10 + 10, and
+
+130
+00:09:23.008 --> 00:09:26.987
+then 0s in the middle,
+and then -10 -10 -10.
+
+131
+00:09:26.987 --> 00:09:30.670
+Which is why you end up with 0 over here.
+
+132
+00:09:30.670 --> 00:09:35.490
+Whereas, in contrast,
+that 30 would be obtained from this.
+
+133
+00:09:36.860 --> 00:09:41.062
+Which you get from having 10 + 10 + 10,
+and
+
+134
+00:09:41.062 --> 00:09:47.190
+then -0 -0, which is why you
+end up with a 30 over there.
+
+135
+00:09:47.190 --> 00:09:51.490
+Now if you plot this rightmost matrix
+as an image, it will look like that,
+
+136
+00:09:51.490 --> 00:09:55.240
+where there's this lighter
+region right in the middle.
+
+137
+00:09:55.240 --> 00:09:59.820
+And that corresponds to having
+detected this vertical edge
+
+138
+00:09:59.820 --> 00:10:03.630
+down the middle of your 6 x 6 image.
+
+139
+00:10:03.630 --> 00:10:06.920
+And in case the dimensions
+here seem a little bit wrong,
+
+140
+00:10:06.920 --> 00:10:09.450
+that the detected edge seems really thick.
+
+141
+00:10:09.450 --> 00:10:13.840
+That's only because we're working with
+very small images in this example.
+
+142
+00:10:13.840 --> 00:10:17.100
+And if you're using, say,
+a 1000 x 1000 image,
+
+143
+00:10:17.100 --> 00:10:22.190
+rather than 6 x 6 image,
+then you find that this
+
+144
+00:10:22.190 --> 00:10:27.390
+does a pretty good job detecting
+the vertical edges in your image.
+
+145
+00:10:27.390 --> 00:10:28.510
+And in this example,
+
+146
+00:10:28.510 --> 00:10:34.225
+this bright region in the middle is just
+the output image's way of saying that
+
+147
+00:10:34.225 --> 00:10:39.355
+it looks like there's a strong vertical
+edge right down the middle of the image.
+
+148
+00:10:39.355 --> 00:10:44.280
+And maybe one intuition to take away
+from vertical edge detection is that
+
+149
+00:10:44.280 --> 00:10:49.315
+a vertical edge is a 3 x 3 region
+since we're using a 3 x 3 filter.
+
+150
+00:10:49.315 --> 00:10:52.706
+Where there are bright pixels on the left.
+
+151
+00:10:52.706 --> 00:10:55.104
+And you don't care that
+much what's in the middle.
+
+152
+00:10:55.104 --> 00:10:58.171
+And dark pixels on the right.
+
+153
+00:10:58.171 --> 00:11:03.011
+And the middle of the image in the 6
+x 6 image is really where there
+
+154
+00:11:03.011 --> 00:11:07.850
+could be bright pixels on the left and
+dark pixels on the right.
+
+155
+00:11:07.850 --> 00:11:12.120
+And that's why it thinks there's
+a vertical edge over there.
+
+156
+00:11:12.120 --> 00:11:16.480
+And the convolution operation gives
+you a convenient way to specify
+
+157
+00:11:16.480 --> 00:11:20.200
+how to find these vertical
+edges in an image.
+
+158
+00:11:20.200 --> 00:11:23.720
+So you've now seen how
+the convolution operator works.
+
+159
+00:11:23.720 --> 00:11:26.430
+In the next video,
+you'll see how to take this and
+
+160
+00:11:26.430 --> 00:11:30.032
+use it as one of the basic building
+blocks of a convolutional neural network.

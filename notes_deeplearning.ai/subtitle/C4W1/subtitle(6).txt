@@ -1,0 +1,163 @@
+You're now ready to see how to build one
+layer of convolutional neural network. Let's go through an example. You've seen in a previous video
+how to take a 3D volume and convolve it with say two
+different filters in order to get, in this example,
+two different four by four outputs. So let's say convolving
+with the first filter gives this first four by four output. And convolving with this second filter
+gives a different four by four output. The final thing to turn this into a
+convolutional neural net layer is that for each of these we're going to add a bias,
+so this is going to be a real number. And with Python broadcasting
+you kind of add the same number to every one of these 16 elements. And then apply a non-linearity,
+which for illustration, this is a [INAUDIBLE] non-linearity and
+this gives you a four by four output after applying the bias and
+the non-linearity. And then for this thing at the bottom
+as well you add some different bias. Again, this is a real number. So you have the same real number,
+it's all 16 numbers. And then apply some non-linearity,
+let's say a real non-linearity. And this gives you a different
+four by four output. Then, same as we did before. If you take this and
+stack it up as follows, so you end up with a four
+by four by two output. Then this computation where you've gone
+from a six by six by three to a four by four by four, this is one layer
+of a compositional neural network. So to map this back to one layer of
+four propagation in the standard neural network, or a non-convolutional neural
+network, remember that one step of forward prop was something like this,
+right, z1 = w1 times a0. a0 was also equal to x. And then plus b1. And you apply the non-linearity to get a1. So that's g(z1). So this input here in this analogy,
+this is a0, and this is x really. And these filters here displays
+a variable similar to w1. And you remember during the convolution
+operation, you're taking these 27 numbers, or really well 27 times 2,
+because you have two filters. You're taking all of these numbers and
+multiplying them, so you're really completing a linear
+function to get this four by four matrix. So that four by four matrix,
+the outputs of the convolution operation, that plays a role similar to w1 times a0. It's really maybe the operative of this
+four by four as well as that four by four. And then the other thing
+you do is add the bias. So this thing here, the four plane value, this plays a role similar to z. And then it's finally by applying the
+non-linearity, it's kind of this, I guess. So this output, right, plays a role, this really becomes your
+activation at the next layer. So this is how you go from a0 to a1. There's first the linear operation and
+then convolution as all these multiply. So the convolution is really applying the
+linear operation, and you add the biases, and you apply a value operation, and
+you've gone from a six by six by three dimensional a0 through
+one layer of a neural network to I guess a four by four
+by two dimensional a1. So six by six by three has
+gone to four by four by two. And so
+that's one layer of a convolutional net. Now in this example we have two filters,
+so we had two features as well. Which is why we want of our
+output four by four by two. But if, for example, we instead had ten
+filters instead of two then we would have one tap with four by four by
+ten dimensional output volume. Because we'd be taking ten of these maps,
+not just two of them, and stacking them up to form a four
+by four by ten output volume. And that's what a1 would be. So to make sure you understand this,
+let's go through an exercise. Let's suppose you have 10 filters, not just 2 filters, that are 3 x 3 x
+3 in one layer of a neural network. How many parameters does this layer have? Well let's figure this out. Each filter is a three by
+three by three volume. So three by three by three. So each filter has 27 parameters, right. So it's 27 numbers to be learned. And then plus the bias, so
+that was the b parameters. So this gives you 28 parameters And then if you imagine that, on the previous
+slide we had drawn two filters, but now if you imagine that you
+actually have ten of these. 1, 2, dot, dot, dot, 10 of these,
+then all together you would have 28 times 10, so
+that would be 280 parameters. Notice one nice thing about this is that
+no matter how big the input image is, the image could be 1,000 by 1,000 or
+5,000 by 5,000, but the number of parameters you
+have still remains fixed as 280. And you can use these ten filters
+to detect features, vertical edges, horizontal edges, maybe other features,
+anywhere even in the very, very large image with just a very
+small number of parameters. So this is really one property of
+convolutional neural nets that makes less prone to over 15, that you could,
+so long as you learn 10 feature detectors that work, you could apply
+this even to very large images. And the number of parameters
+still remains fixed and relatively small, as 280 in this example. All right, so to wrap up this video, let's just summarize the notation we're
+going to use to describe one layer, to describe a convolutional layer,
+in convolution neural network. So layer l is a convolutional layer. I'm going to use f superscript
+[l] to denote the filter size. So previously we've been saying
+the filters are f by f, and now this superscript [l] just denotes
+that this is a filter size as an f by f filter in the layer l. And as usual the superscript [l] is the
+notation we're using to refer to layer l. going to use p[l] to denote
+the amount of padding, and again, the amount of padding can also
+be specified just by saying that you want a valid convolution,
+which means no padding. Or a same convolution,
+which means you choose the padding so that the output size has the same
+height and width as the input size. And then I'm going to use
+s[l] to denote the stride. Now the input to this layer is
+going to be some dimension. There's going to be some n by n by number of channels
+in the previous layer. Now I'm going to modify this notation
+a little bit, I'm going to use superscript l-1 because that's the activation
+from the previous layer up. [l-1] times nc[l-1]. And in the examples so far, we've been just using images
+with the same height and width. But in case the height and width might
+differ, I'm going to use superscript h and superscript w to denote the height and
+width of the input of the previous layer. All right, so
+in layer l the size of the volume will be nh by nw by nc,
+with superscript [l]. It's just in layer l the input to
+this layer is whatever you had from the previous layer, so
+that's why you have o minus one there. And then the neural network,
+excuse me, this layer and then this layer of the neural network will
+output, will itself output the volume. So that would be nh of l
+by nw of l by nc of l, l be the size of the output. And so whereas we have previously
+said that the output volume size, or at least the height and
+width, is given by this formula, (n+2p-f over s)+1, and then take the full of that or
+round it down. And in this new notation what
+we have is that the output's volume that is in layer l is
+going to be the dimension from the previous layer plus
+the padding we're using in this layer l minus the filter size we're
+using in this layer l and so on. And technically this is true for
+the height, right, so the height of the output
+volume is given by this. And you can compute it with
+this formula on the right. And the same is true for
+the width as well, so you cross out h and throw in w as well. Then the same formula with either
+the height or the width plugged in. We're also computing the height or
+the width of the output volume. So that's how nhl-1 relates to nh1,
+and wl-1 relates to nwl. Now how about the number of channels? Where do those numbers come from? Let's take a look. If the upward volume has this depth,
+well we know from the previous examples that that's equal to the number
+of filters we have in that layer. So we had two filters, the output volume was four by four
+by four by two, was two dimensional. And if you have ten filters, then
+the output volume was four by four by ten. So this, the number of
+channels in the output volume, that's just the number of filters we're
+using in this layer of the neural network. Next, how about the size of each filter? Well each filter is going to be fl,
+by fl by one other number, right. So what is this lost number? Well we saw that you
+need to convolve a six by six by three image with a three
+by three by three filter. And so
+the number of channels in your filter must match the number of
+channels in your input. So this number should match that number,
+right, which is why each filter is
+going to be fl by fl by nc, l-1. And the output of this layer
+after applying the biases and non-linearity is going to be
+the activations of this layer, al. And that we've already seen
+will be this dimension, right. The al will be a 3D volume that's n hl by nwl by ncl. And when you are using
+a [INAUDIBLE] instrumentation or you know [INAUDIBLE] or
+mini [INAUDIBLE], then you actually output al which is a set of m
+activations if you have m examples. So that will be m by nhl by nwl by ncl,
+right. If say you're using. And in the parameter sizes, this would
+be ordering of the variables and we have the index and
+the training examples first and then these three variables. Next, how about the weights or
+the parameters or kind of the w parameter? Well we saw already what
+the filter dimension is. So the filters are going to
+be fl by fl by nc l-1, but that's the dimension of one filter. How many filters do we have? Well this is the total number of filters,
+so the weights,
+really all of the filters put together, will have dimension given by this times
+the total number of filters, right. Because this loss
+quantity is the number of filters, In layer l. And then finally you have
+the bias parameters, and you have one bias parameter,
+one real number, for each filter. So you're going to have,
+the bias will have this many variables, it's just a vector of this dimension. Although later on we'll see that
+in the code it will be more convenient represented as a one
+by one by one by ncl dimension, four dimensional matrix or
+four dimensional. So I know that was a lot of notation, and, This is the convention I've used for
+the most part. I just want to mention, in case you search
+online and look at open source codes, there isn't a completely universal
+standard convention about the ordering of height, width, and channel. So if you look on source code on GitHub or read some of the open source
+implementations, you find that some authors use this authoring standard
+where you first put the channel first. And you sometimes see that all
+through the other variables. And in fact in some current frameworks,
+actually in multiple current frameworks, there's actually a variable or a parameter
+whether you want to list the number of channels first list the number of channels
+lost when indexing into these volumes. And I think both of these conventions
+work okay so long as you are consistent. And unfortunately maybe this
+is one piece of notation where there isn't consensus in
+the deep learning literature. But I'm going to use this convention for
+these videos. Where we list height and then width and
+then the number of channels lost. So I know there was suddenly a lot of new
+notations introduced, but you thinking, wow, there is a lot of notation. How do I need to remember all of these? Don't worry about it, you don't need
+to remember all of this notation, and through this week's exercises you become
+more familiar with it at that time. But the key point I hope you take away
+from this video is just how one layer of the compositional neural network works,
+and the computations involved in taking the activations of one layer and mapping
+that to the activations of the next layer. And next, now that you know how one layer
+of the compositional neural network works, let's stack a bunch of these
+together to actually form a deeper compositional neural network. Let's go on to the next video to

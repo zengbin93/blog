@@ -1,0 +1,633 @@
+WEBVTT
+
+1
+00:00:01.410 --> 00:00:04.375
+In order to build deep neural networks,
+
+2
+00:00:04.375 --> 00:00:07.930
+one modification to the basic convolutional operation
+
+3
+00:00:07.930 --> 00:00:10.675
+that you need to really use is padding.
+
+4
+00:00:10.675 --> 00:00:12.232
+Let's see how it works.
+
+5
+00:00:12.232 --> 00:00:15.190
+What we saw in earlier videos is that if you take
+
+6
+00:00:15.190 --> 00:00:19.385
+a six-by-six image and convolve it with a three-by-three filter,
+
+7
+00:00:19.385 --> 00:00:23.719
+you end up with a four-by-four output with a four-by-four matrix.
+
+8
+00:00:23.719 --> 00:00:28.413
+And that's because, the number of possible positions for your three-by-three filter,
+
+9
+00:00:28.413 --> 00:00:31.915
+there are only sort of four-by-four possible positions for
+
+10
+00:00:31.915 --> 00:00:37.035
+the three-by-three filter to fit in your six-by-six matrix.
+
+11
+00:00:37.035 --> 00:00:42.785
+The math for this turns out to be that if we have a n-by-n image,
+
+12
+00:00:42.785 --> 00:00:46.047
+and to involve that with an f-by-f filter,
+
+13
+00:00:46.047 --> 00:00:50.090
+then the dimension of the output will be n
+
+14
+00:00:50.090 --> 00:00:56.828
+minus f plus one by n minus f plus one.
+
+15
+00:00:56.828 --> 00:01:03.455
+In this example, six minus three plus one is equal to four,
+
+16
+00:01:03.455 --> 00:01:07.242
+which is why you wind up with four-by-four output.
+
+17
+00:01:07.242 --> 00:01:09.200
+The two downsides to this,
+
+18
+00:01:09.200 --> 00:01:13.680
+one is that every time you apply a convolutional operator,
+
+19
+00:01:13.680 --> 00:01:17.195
+your image shrinks so you come from six-by-six down to four-by-four,
+
+20
+00:01:17.195 --> 00:01:21.730
+then you can only do this a few times before your image starts getting really small.
+
+21
+00:01:21.730 --> 00:01:23.870
+Maybe it strings down to one-by-one or something,
+
+22
+00:01:23.870 --> 00:01:26.720
+so maybe you don't want your image to shrink
+
+23
+00:01:26.720 --> 00:01:29.870
+every time you touch the edges or install other features on it,
+
+24
+00:01:29.870 --> 00:01:31.513
+so that's one downside.
+
+25
+00:01:31.513 --> 00:01:33.590
+And the second downside is that,
+
+26
+00:01:33.590 --> 00:01:36.665
+if you look the pixel at the corner or the edge,
+
+27
+00:01:36.665 --> 00:01:38.710
+this little pixel is touched,
+
+28
+00:01:38.710 --> 00:01:40.755
+it has used only in one of the outputs,
+
+29
+00:01:40.755 --> 00:01:43.490
+because this touches that three-by-three region.
+
+30
+00:01:43.490 --> 00:01:48.905
+Whereas, if you take a pixel in the middle, say this pixel,
+
+31
+00:01:48.905 --> 00:01:54.200
+then there are a lot of the three-by-three regions that overlap that pixel,
+
+32
+00:01:54.200 --> 00:02:01.455
+and so it's as if pixels on the corners or on the edges are used much less in the output,
+
+33
+00:02:01.455 --> 00:02:06.390
+so you're throwing away a lot of the information near the edge of the image.
+
+34
+00:02:06.390 --> 00:02:08.735
+So to solve both of these problems,
+
+35
+00:02:08.735 --> 00:02:12.829
+both the shrinking output,
+
+36
+00:02:12.829 --> 00:02:15.485
+and when we build really deep neural networks,
+
+37
+00:02:15.485 --> 00:02:18.560
+you'll see why you don't want the image to shrink on every step
+
+38
+00:02:18.560 --> 00:02:21.966
+because if you have maybe 100 layer deep net,
+
+39
+00:02:21.966 --> 00:02:25.460
+then the strings that are on every layer then after 100 layers,
+
+40
+00:02:25.460 --> 00:02:27.975
+you end up with a very small image.
+
+41
+00:02:27.975 --> 00:02:32.850
+So that was one problem. The other is throwing away a lot
+
+42
+00:02:32.850 --> 00:02:38.075
+of the information from the edges of the image.
+
+43
+00:02:38.075 --> 00:02:40.740
+So in order to fix both of these problems,
+
+44
+00:02:40.740 --> 00:02:42.365
+what you can do is,
+
+45
+00:02:42.365 --> 00:02:44.845
+the full upon the convolutional operation,
+
+46
+00:02:44.845 --> 00:02:46.810
+you can pad the image.
+
+47
+00:02:46.810 --> 00:02:47.985
+So in this case,
+
+48
+00:02:47.985 --> 00:02:50.730
+let's say you pad the image with
+
+49
+00:02:50.730 --> 00:03:00.670
+an additional border of one pixel all around the edges.
+
+50
+00:03:00.670 --> 00:03:02.635
+So if you do that,
+
+51
+00:03:02.635 --> 00:03:05.240
+then the six-by-six image,
+
+52
+00:03:05.240 --> 00:03:08.860
+you've now padded this to eight-by-eight image.
+
+53
+00:03:08.860 --> 00:03:10.100
+And if you convolve an eight-by-eight image with a three-by-three image,
+
+54
+00:03:10.100 --> 00:03:14.470
+you now get that out,
+
+55
+00:03:14.470 --> 00:03:16.935
+now the four-by-four by the six-by-six images.
+
+56
+00:03:16.935 --> 00:03:22.775
+So you managed to preserve the original input size of six-by-six.
+
+57
+00:03:22.775 --> 00:03:27.490
+So by convention, when you padded with zeros,
+
+58
+00:03:27.490 --> 00:03:33.296
+and p is the padding amounts.
+
+59
+00:03:33.296 --> 00:03:34.575
+So in this case,
+
+60
+00:03:34.575 --> 00:03:41.180
+p is equal to one, because we're padding all around with an extra border of one pixels,
+
+61
+00:03:41.180 --> 00:03:50.505
+that the output becomes n plus two p minus f plus one,
+
+62
+00:03:50.505 --> 00:03:54.360
+by n plus two p minus f by one.
+
+63
+00:03:54.360 --> 00:03:57.750
+So this become six plus two times one,
+
+64
+00:03:57.750 --> 00:04:00.115
+minus three plus one,
+
+65
+00:04:00.115 --> 00:04:02.480
+by the same thing on that.
+
+66
+00:04:02.480 --> 00:04:05.050
+So six plus two minus three plus one,
+
+67
+00:04:05.050 --> 00:04:06.475
+that's equals to six.
+
+68
+00:04:06.475 --> 00:04:08.850
+So you end up with a six-by-six image.
+
+69
+00:04:08.850 --> 00:04:12.880
+That's the image appearance at that point.
+
+70
+00:04:12.880 --> 00:04:21.143
+So this green pixel actually influences all of these cells of the output,
+
+71
+00:04:21.143 --> 00:04:23.371
+and so this effective,
+
+72
+00:04:23.371 --> 00:04:26.700
+maybe not quite throwing away but counting less
+
+73
+00:04:26.700 --> 00:04:32.715
+the information from the edge of a corner or the edge of the image is reduced.
+
+74
+00:04:32.715 --> 00:04:38.240
+And I've shown here the effects of having the border with just one pixel.
+
+75
+00:04:38.240 --> 00:04:41.760
+If you want, you can also pad the border with two pixels.
+
+76
+00:04:41.760 --> 00:04:45.645
+In which case, I guess you add on another border here,
+
+77
+00:04:45.645 --> 00:04:50.125
+and take and pad it with even more pixels if you choose.
+
+78
+00:04:50.125 --> 00:04:52.820
+So I guess what I'm trying here,
+
+79
+00:04:52.820 --> 00:04:54.220
+this would be a pad of p equals two.
+
+80
+00:04:54.220 --> 00:05:00.665
+In terms of how much to pad,
+
+81
+00:05:00.665 --> 00:05:03.260
+this time there are two common choices.
+
+82
+00:05:03.260 --> 00:05:07.380
+They are called Valid convolutions and Same convolutions.
+
+83
+00:05:07.380 --> 00:05:08.635
+Not really great things,
+
+84
+00:05:08.635 --> 00:05:10.855
+but in a valid convolution,
+
+85
+00:05:10.855 --> 00:05:15.015
+this basically means no padding.
+
+86
+00:05:15.015 --> 00:05:17.410
+And so in this case,
+
+87
+00:05:17.410 --> 00:05:20.910
+you might have an n-by-n image, convolve with an f-by-f filter,
+
+88
+00:05:20.910 --> 00:05:30.262
+and this would give you an n minus f plus one by n minus f plus one dimensional output.
+
+89
+00:05:30.262 --> 00:05:34.470
+So this is like the example we had previously from the previous videos
+
+90
+00:05:34.470 --> 00:05:38.938
+where we had an n-by-n image convolve with a three-by-three filter,
+
+91
+00:05:38.938 --> 00:05:41.410
+and that gave you a four-by-four output.
+
+92
+00:05:41.410 --> 00:05:50.548
+The other most common choice or padding is called the Same Convolution.
+
+93
+00:05:50.548 --> 00:05:52.660
+And that means when you pad,
+
+94
+00:05:52.660 --> 00:05:58.580
+so the output size is the same as the input size.
+
+95
+00:05:58.580 --> 00:06:01.495
+So, if you actually look at this formula,
+
+96
+00:06:01.495 --> 00:06:04.185
+when you pad by p pixels,
+
+97
+00:06:04.185 --> 00:06:08.255
+then it's as if n goes to n plus two p,
+
+98
+00:06:08.255 --> 00:06:11.545
+and then you have from the rest of this,
+
+99
+00:06:11.545 --> 00:06:15.740
+minus f plus one.
+
+100
+00:06:15.740 --> 00:06:17.785
+So even n-by-n image,
+
+101
+00:06:17.785 --> 00:06:22.045
+and the padding of a border of p pixels all around,
+
+102
+00:06:22.045 --> 00:06:24.730
+then the output size is a big destination,
+
+103
+00:06:24.730 --> 00:06:28.900
+n plus two p minus f plus one.
+
+104
+00:06:28.900 --> 00:06:36.080
+And so if you want n plus two p minus f plus 1 to be equal to 1,
+
+105
+00:06:36.080 --> 00:06:38.795
+so that the output size is same as the input size,
+
+106
+00:06:38.795 --> 00:06:42.340
+if you take this and solve for,
+
+107
+00:06:42.340 --> 00:06:44.870
+I guess it cancels out on both sides,
+
+108
+00:06:44.870 --> 00:06:46.722
+and if you solve for p,
+
+109
+00:06:46.722 --> 00:06:53.463
+this implies that p is equal to f minus one over two.
+
+110
+00:06:53.463 --> 00:06:55.590
+So when f is odd,
+
+111
+00:06:55.590 --> 00:06:59.050
+by choosing the padding size to be as follows,
+
+112
+00:06:59.050 --> 00:07:04.030
+you should make sure that the output size is same as the input size.
+
+113
+00:07:04.030 --> 00:07:06.265
+And that's why, for example,
+
+114
+00:07:06.265 --> 00:07:10.837
+when the filter was three-by-three as the example on the previous slide,
+
+115
+00:07:10.837 --> 00:07:15.990
+the padding that would make the upper size the same as the input size was three minus
+
+116
+00:07:15.990 --> 00:07:21.790
+one over two, which is one.
+
+117
+00:07:21.790 --> 00:07:23.415
+And as another example,
+
+118
+00:07:23.415 --> 00:07:28.250
+if your filter was five-by-five,
+
+119
+00:07:28.250 --> 00:07:30.080
+so f is equal to five,
+
+120
+00:07:30.080 --> 00:07:31.945
+then if you plug it into that equation,
+
+121
+00:07:31.945 --> 00:07:38.350
+you find that the padding of two is required to keep the output size the same as
+
+122
+00:07:38.350 --> 00:07:44.995
+the input size when the filter is five-by-five.
+
+123
+00:07:44.995 --> 00:07:47.560
+By convention, in computer vision,
+
+124
+00:07:47.560 --> 00:07:50.510
+f is usually odd.
+
+125
+00:07:50.510 --> 00:07:51.905
+It's actually almost always odd.
+
+126
+00:07:51.905 --> 00:07:58.740
+And you rarely see an even-numbered filters,
+
+127
+00:07:58.740 --> 00:08:02.631
+filter words using computer vision.
+
+128
+00:08:02.631 --> 00:08:05.280
+And I think there are two reasons for that.
+
+129
+00:08:05.280 --> 00:08:07.320
+One is that if f was even,
+
+130
+00:08:07.320 --> 00:08:10.155
+then you need some asymmetric padding,
+
+131
+00:08:10.155 --> 00:08:15.090
+or it's only f is not that this type of same convolution gives a natural padding.
+
+132
+00:08:15.090 --> 00:08:17.170
+We can pad the same dimension all around them,
+
+133
+00:08:17.170 --> 00:08:21.720
+pad more on the left and pad less on the right or something asymmetric.
+
+134
+00:08:21.720 --> 00:08:27.690
+And then second, when you have an automation filter,
+
+135
+00:08:27.690 --> 00:08:29.770
+such as three-by-three or five-by-five,
+
+136
+00:08:29.770 --> 00:08:33.430
+then it has a central position and sometimes in computer vision,
+
+137
+00:08:33.430 --> 00:08:36.095
+it's nice to have a distinguisher.
+
+138
+00:08:36.095 --> 00:08:38.910
+It's nice to have a pixel you can call the central pixel,
+
+139
+00:08:38.910 --> 00:08:43.198
+so you can talk about the position of the filter.
+
+140
+00:08:43.198 --> 00:08:48.580
+Maybe none of this is a great reason for using f to be pretty much always odd,
+
+141
+00:08:48.580 --> 00:08:50.090
+but if you look at convolution literature,
+
+142
+00:08:50.090 --> 00:08:53.680
+you see three-by-three filters are very common,
+
+143
+00:08:53.680 --> 00:08:56.855
+you see some five-by-five, seven-by-seven.
+
+144
+00:08:56.855 --> 00:08:58.390
+And that is sometimes later,
+
+145
+00:08:58.390 --> 00:09:01.980
+we will also talk about one-by-one filters and one that makes sense.
+
+146
+00:09:01.980 --> 00:09:04.130
+But just by convention,
+
+147
+00:09:04.130 --> 00:09:08.335
+I recommend you just use odd-numbered filters as well.
+
+148
+00:09:08.335 --> 00:09:10.385
+I think that you can probably get
+
+149
+00:09:10.385 --> 00:09:14.180
+just fine performance even if you want to use an even number value for f,
+
+150
+00:09:14.180 --> 00:09:17.940
+but if you stick to the common computer vision convention,
+
+151
+00:09:17.940 --> 00:09:25.865
+I usually just use odd-numbered f. So you've now seen how to use padding convolutions.
+
+152
+00:09:25.865 --> 00:09:28.910
+To specify the padding for the convolution operation,
+
+153
+00:09:28.910 --> 00:09:31.835
+you can either specify the value for p,
+
+154
+00:09:31.835 --> 00:09:35.990
+or you can just say that this is a valid convolution which means p equals zero,
+
+155
+00:09:35.990 --> 00:09:39.620
+or you can say this is the same convolution which means pad
+
+156
+00:09:39.620 --> 00:09:43.780
+as much as you need to make sure the output has same dimension as the input.
+
+157
+00:09:43.780 --> 00:09:45.950
+So that's it for padding. In the next video,
+
+158
+00:09:45.950 --> 00:09:49.220
+let's talk about how you can implement Strided Convolution.

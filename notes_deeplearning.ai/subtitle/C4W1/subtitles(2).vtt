@@ -1,0 +1,552 @@
+WEBVTT
+
+1
+00:00:02.257 --> 00:00:05.290
+You've seen how the convolution
+operation allows you to
+
+2
+00:00:05.290 --> 00:00:07.800
+implement a vertical edge detector.
+
+3
+00:00:07.800 --> 00:00:11.650
+In this video, you learn the difference
+between positive and negative edges.
+
+4
+00:00:11.650 --> 00:00:15.485
+That is, the difference between
+light to dark, versus dark to light,
+
+5
+00:00:15.485 --> 00:00:17.110
+edge transitions.
+
+6
+00:00:17.110 --> 00:00:19.928
+And you also see other
+types of edge detectors,
+
+7
+00:00:19.928 --> 00:00:22.402
+as well as how to have an algorithm learn.
+
+8
+00:00:22.402 --> 00:00:26.969
+Rather than having us hand coding an edge
+detector, as we've been doing so far, so
+
+9
+00:00:26.969 --> 00:00:33.959
+let's get started, Here's the example
+you saw from the previous video,
+
+10
+00:00:33.959 --> 00:00:38.781
+where you have this image, 6 by 6, that's
+light on the left and dark on the right.
+
+11
+00:00:38.781 --> 00:00:41.955
+And convolving it with
+the vertical edge detection filter
+
+12
+00:00:41.955 --> 00:00:46.365
+results in detecting the vertical
+edge down the middle of the image.
+
+13
+00:00:47.710 --> 00:00:51.284
+What happens in an image
+where the colors are flipped,
+
+14
+00:00:51.284 --> 00:00:55.104
+where it is darker on the left,
+and brighter on the right?
+
+15
+00:00:55.104 --> 00:00:59.930
+So the 10s are now on the right half
+of the image, and the 0s on the left.
+
+16
+00:00:59.930 --> 00:01:03.240
+If you convolve it with
+the same edge detection filter,
+
+17
+00:01:03.240 --> 00:01:08.130
+you end up with -30 instead
+of 30 down the middle.
+
+18
+00:01:08.130 --> 00:01:11.160
+And you can plot that as a picture,
+and it will look like that.
+
+19
+00:01:12.820 --> 00:01:15.948
+Because the shade of
+the transition is reversed,
+
+20
+00:01:15.948 --> 00:01:18.302
+the 30s now get reversed as well.
+
+21
+00:01:18.302 --> 00:01:24.030
+And -30s shows that this
+is a dark to light,
+
+22
+00:01:24.030 --> 00:01:26.790
+rather than a light to dark transition.
+
+23
+00:01:26.790 --> 00:01:29.740
+And if you don't care which
+of these two cases it is,
+
+24
+00:01:29.740 --> 00:01:34.440
+you could take absolute
+values of this output matrix.
+
+25
+00:01:34.440 --> 00:01:38.970
+But this particular filter does make
+a difference between the light to dark,
+
+26
+00:01:38.970 --> 00:01:41.340
+versus the dark to light edges.
+
+27
+00:01:42.500 --> 00:01:45.190
+Let's see some more
+examples of edge detection.
+
+28
+00:01:45.190 --> 00:01:50.388
+This 3 by 3 filter we've seen allows
+you to detect vertical edges.
+
+29
+00:01:50.388 --> 00:01:53.025
+Maybe it should not surprise you too much,
+
+30
+00:01:53.025 --> 00:01:57.210
+that this 3 by 3 filter will allow
+you to detect horizontal edges.
+
+31
+00:01:58.350 --> 00:02:01.840
+As a reminder, a vertical edge,
+according to this filter,
+
+32
+00:02:01.840 --> 00:02:06.130
+is a 3 by 3 region where the pixels are
+relatively bright on the left part, and
+
+33
+00:02:06.130 --> 00:02:08.700
+relatively dark on the right part.
+
+34
+00:02:08.700 --> 00:02:13.967
+Similarly, a horizontal edge would be
+a [INAUDIBLE] division, where the pixels
+
+35
+00:02:13.967 --> 00:02:18.618
+are relatively bright on top, and
+relatively dark in the bottom row.
+
+36
+00:02:18.618 --> 00:02:22.524
+Here's one example,
+this is a more complex one,
+
+37
+00:02:22.524 --> 00:02:28.197
+where you have here 10s in the upper
+left and lower right hand corners.
+
+38
+00:02:28.197 --> 00:02:30.362
+If you draw this as an image,
+
+39
+00:02:30.362 --> 00:02:35.170
+this is an image which is going
+to be darker where there's 0s.
+
+40
+00:02:35.170 --> 00:02:39.860
+I'm going to shade in the darker regions,
+and then lighter in the upper left,
+
+41
+00:02:39.860 --> 00:02:41.860
+and lower right hand corners.
+
+42
+00:02:41.860 --> 00:02:48.462
+And if you convolve this with a horizontal
+edge detector, you end up with this.
+
+43
+00:02:48.462 --> 00:02:52.085
+And so, just to take a couple examples,
+
+44
+00:02:52.085 --> 00:02:56.677
+this 30 here corresponds
+to this 3 by 3 region.
+
+45
+00:02:56.677 --> 00:03:02.799
+Where indeed there are bright pixels on
+top, and darker pixels on the bottom,
+
+46
+00:03:02.799 --> 00:03:07.260
+over here, and so
+it finds a strong positive edge there.
+
+47
+00:03:08.336 --> 00:03:12.641
+And this -30 here
+corresponds to this region,
+
+48
+00:03:12.641 --> 00:03:16.433
+which is actually brighter
+on the bottom and
+
+49
+00:03:16.433 --> 00:03:21.471
+darker on top, so
+that is a negative edge in this example.
+
+50
+00:03:21.471 --> 00:03:26.343
+And again, this is kind of an artifact
+of the fact that we're working
+
+51
+00:03:26.343 --> 00:03:31.300
+with relatively small images,
+that this is just a 6 by 6 image.
+
+52
+00:03:31.300 --> 00:03:34.210
+But these intermediate values,
+like this -10 for
+
+53
+00:03:34.210 --> 00:03:39.150
+example, just reflects the fact that
+that filter here, it captures part
+
+54
+00:03:39.150 --> 00:03:44.020
+of the positive edge on the left, and
+part of the negative edge on the right.
+
+55
+00:03:44.020 --> 00:03:47.120
+And so blending those together
+gives you some intermediate value.
+
+56
+00:03:47.120 --> 00:03:52.580
+But if this was a very large,
+say 1000 by 1000 image, with this type
+
+57
+00:03:52.580 --> 00:03:58.160
+of checkerboard pattern, then you won't
+see these transition regions of the 10s.
+
+58
+00:03:58.160 --> 00:04:01.960
+The intermediate values would be quite
+small relative to the size of the image.
+
+59
+00:04:03.520 --> 00:04:10.220
+In summary, different filters allow you
+to find vertical and horizontal edges.
+
+60
+00:04:10.220 --> 00:04:15.320
+It turns out that the 3 by 3
+vertical edge detection filter
+
+61
+00:04:15.320 --> 00:04:17.870
+we've used is just one possible choice.
+
+62
+00:04:17.870 --> 00:04:20.682
+And historically in
+the computer vision literature,
+
+63
+00:04:20.682 --> 00:04:24.603
+there was a fair amount of debate about
+what is the best set of numbers to use.
+
+64
+00:04:24.603 --> 00:04:29.887
+So here's something else you
+could use which is maybe 1, 2,
+
+65
+00:04:29.887 --> 00:04:35.681
+1, 0, 0, 0 -1, -2, -1,
+this is called a Sobel filter.
+
+66
+00:04:35.681 --> 00:04:41.470
+And the advantage of this is, it puts a
+little bit more weight to the central row,
+
+67
+00:04:41.470 --> 00:04:46.430
+the central pixel, and this makes
+it maybe a little bit more robust.
+
+68
+00:04:46.430 --> 00:04:50.517
+But computer vision researchers will
+use other sets of numbers as well.
+
+69
+00:04:50.517 --> 00:04:55.655
+Like maybe, instead of a 1,
+2, 1, it should be a 3,
+
+70
+00:04:55.655 --> 00:05:02.828
+10, 3, and then -3, -10, -3, and
+this is called a Scharr filter,
+
+71
+00:05:02.828 --> 00:05:07.881
+and this has yet
+other slightly different properties.
+
+72
+00:05:07.881 --> 00:05:11.749
+And this is just called vertical edge
+detection, and if you flip it 90 degrees,
+
+73
+00:05:11.749 --> 00:05:14.310
+you get horizontal edge detection.
+
+74
+00:05:14.310 --> 00:05:18.960
+And with the rise of deep learning,
+one of the things we learn is that,
+
+75
+00:05:18.960 --> 00:05:23.210
+when you really want to detect
+edges in some complicated image.
+
+76
+00:05:23.210 --> 00:05:27.781
+Maybe you don't need to have computer
+vision researchers hand pick these
+
+77
+00:05:27.781 --> 00:05:31.325
+nine numbers,
+maybe you can just learn them.
+
+78
+00:05:31.325 --> 00:05:36.125
+And treat the nine numbers of this matrix
+as parameters, which you can then learn
+
+79
+00:05:36.125 --> 00:05:40.161
+using back propagation, and
+the goal is to learn nine parameters.
+
+80
+00:05:40.161 --> 00:05:43.221
+So that when you take the 6 by 6 image,
+and
+
+81
+00:05:43.221 --> 00:05:48.935
+convolve it with your 3 by 3 filter,
+that this gives you a good edge detector.
+
+82
+00:05:50.030 --> 00:05:52.522
+And what you see in later videos,
+
+83
+00:05:52.522 --> 00:05:56.984
+is that by just treating these
+nine numbers as parameters.
+
+84
+00:05:56.984 --> 00:06:01.528
+The backprop can choose to learn 1,
+1, 1, 0, 0, 0, -1, -1, -1, or
+
+85
+00:06:01.528 --> 00:06:04.089
+learn the Sobel filter,
+or the Scharr filter.
+
+86
+00:06:04.089 --> 00:06:08.587
+Or more likely, learn something else, that
+is even better at capturing the statistics
+
+87
+00:06:08.587 --> 00:06:11.347
+of your data,
+than any of this hand-coded filters.
+
+88
+00:06:13.430 --> 00:06:14.760
+And rather than just vertical and
+
+89
+00:06:14.760 --> 00:06:19.530
+horizontal edges, maybe it can learn to
+detect edges that are at 45 degrees, or
+
+90
+00:06:19.530 --> 00:06:24.540
+70 degrees, or 73 degrees, or
+whatever orientation it chooses.
+
+91
+00:06:26.315 --> 00:06:30.405
+And so, by just letting all of
+these numbers be parameters, and
+
+92
+00:06:30.405 --> 00:06:32.925
+learning them automatically from data.
+
+93
+00:06:32.925 --> 00:06:36.240
+We find that neural networks can
+actually learn low level features,
+
+94
+00:06:36.240 --> 00:06:38.607
+can learn features such as edges.
+
+95
+00:06:38.607 --> 00:06:42.317
+Even more robustly than
+computer vision researchers
+
+96
+00:06:42.317 --> 00:06:45.467
+are generally able to code
+out these things by hand.
+
+97
+00:06:45.467 --> 00:06:50.258
+But underlying all these computations
+
+98
+00:06:50.258 --> 00:06:55.055
+is still this convolution operation.
+
+99
+00:06:55.055 --> 00:06:59.560
+Which allows back propagation to learn
+whatever 3 by 3 filter it wants, and
+
+100
+00:06:59.560 --> 00:07:02.279
+then to apply it throughout
+the entire image.
+
+101
+00:07:02.279 --> 00:07:06.680
+At this position, at this position,
+at this position,
+
+102
+00:07:06.680 --> 00:07:11.366
+in order to output whatever
+feature it's trying to detect.
+
+103
+00:07:11.366 --> 00:07:14.710
+Be it vertical edges, horizontal edges,
+or edges at some odd angle.
+
+104
+00:07:14.710 --> 00:07:18.671
+Or even some other filter that we might
+not even have a name for in English.
+
+105
+00:07:18.671 --> 00:07:22.928
+So the idea that you can treat these
+nine numbers as parameters, we learn,
+
+106
+00:07:22.928 --> 00:07:27.040
+has been one of the most powerful
+ideas in computer vision.
+
+107
+00:07:27.040 --> 00:07:31.400
+And later in this course, later this week,
+we'll actually talk about the details of
+
+108
+00:07:31.400 --> 00:07:35.980
+how you actually go about using back
+propagation to learn these nine numbers.
+
+109
+00:07:35.980 --> 00:07:38.530
+But first,
+let's talk about some other details,
+
+110
+00:07:38.530 --> 00:07:41.890
+some of the deviations of
+the basic convolutional operation.
+
+111
+00:07:41.890 --> 00:07:45.674
+In the next two videos, I want to
+discuss with you how to use padding,
+
+112
+00:07:45.674 --> 00:07:48.360
+as well as different strides for
+convolutions.
+
+113
+00:07:48.360 --> 00:07:52.795
+And these two will become important pieces
+of this convolutional building block of
+
+114
+00:07:52.795 --> 00:07:56.420
+convolutional neural networks, so
+let's go on to the next video.
